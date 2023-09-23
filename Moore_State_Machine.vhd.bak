@@ -1,0 +1,8 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+Entity Moore_State_Machine is
+port(
+	clk					: in std_logic;
+	reset					: in std_logic;
+	sm_clken				: in std_logic;

@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-Entity State_Machine_Example IS Port
+Entity State_Machine IS Port
 (
  clk_input, reset, I0, I1, I2			: IN std_logic;
  output1, output2						: OUT std_logic
@@ -10,7 +10,7 @@ Entity State_Machine_Example IS Port
 END ENTITY;
  
 
- Architecture SM of State_Machine_Example is
+ Architecture SM of State_Machine is
  
  
  TYPE STATE_NAMES IS (S0, S1, S2, S3, S4, S5, S6, S7);   -- list all the STATE_NAMES values
@@ -22,11 +22,6 @@ END ENTITY;
 
  BEGIN
 
- -------------------------------------------------------------------------------
- --State Machine:
- -------------------------------------------------------------------------------
-
- -- REGISTER_LOGIC PROCESS EXAMPLE
  
 Register_Section: PROCESS (clk_input)  -- this process updates with a clock
 BEGIN
@@ -39,9 +34,6 @@ BEGIN
 	END IF;
 END PROCESS;	
 
-
-
--- TRANSITION LOGIC PROCESS EXAMPLE
 
 Transition_Section: PROCESS (I0, I1, I2, current_state) 
 
@@ -98,8 +90,6 @@ BEGIN
 	  END CASE;
  END PROCESS;
  
-
--- DECODER SECTION PROCESS EXAMPLE (MOORE FORM SHOWN)
 
 Decoder_Section: PROCESS (current_state) 
 

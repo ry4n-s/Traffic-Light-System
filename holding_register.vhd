@@ -1,45 +1,34 @@
---Author: Group 10, Ryan Stefanov, Ryan Wang
-library ieee;
-use ieee.std_logic_1164.all;
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
 
+-- Entity declaration for holding_register
+ENTITY holding_register IS
+    PORT (
+        clk          : IN  std_logic;     -- Clock input
+        reset        : IN  std_logic;     -- Chip-wide reset from push button 3
+        register_clr : IN  std_logic;     -- Clear signal for the register
+        din          : IN  std_logic;     -- Synchronized input
+        dout         : OUT std_logic      -- Output of the holding register
+    );
+END holding_register;
 
-entity holding_register is port ( -- the holding register monitors for pedestrian inputs in states 8 and 9 for NS and 0 and 1 for EW
-
-			clk					: in std_logic;
-			reset					: in std_logic; -- the chip-wide reset from push button 3
-			register_clr		: in std_logic;
-			din					: in std_logic; -- the synchronized input
-			dout					: out std_logic
-  );
- end holding_register;
- 
- architecture circuit of holding_register is
-
-	Signal sreg				: std_logic; -- the output Q of the D flip flop
-
+-- Architecture of holding_register
+ARCHITECTURE circuit OF holding_register IS
+    SIGNAL sreg : std_logic; -- The output Q of the D flip-flop
 
 BEGIN
+    -- Holding process to monitor pedestrian inputs
+    holding : PROCESS (clk, reset, register_clr, din)
+    BEGIN
+        IF rising_edge(clk) THEN
+            IF reset = '1' THEN
+                sreg <= '0'; -- Reset output to 0
+            ELSE
+                sreg <= (din OR sreg) AND NOT(register_clr); -- Logic from the diagram in the manual
+            END IF;
+        END IF;
 
-	holding: process (clk, reset, register_clr, din) is 
-	
-	begin
-	
-		if( rising_edge(clk) ) then -- only occurs on rising edge of clock
-			
-			if ( reset = '1') then -- if the reset is on, no matter what the other inputs are, the output is 0
-			
-				sreg <= '0';
-				
-			else 
-				
-				sreg <= (din OR sreg) AND ( NOT(register_clr) ); -- from the diagram in the manual
-				
-			end if;
-			
-		end if;
-		
-		dout <= sreg; -- the output of the D flip flop, Q, becomes the final output
-		
-	end process;
-	
-END;
+        dout <= sreg; -- The output Q becomes the final output
+    END PROCESS holding;
+
+END circuit;
